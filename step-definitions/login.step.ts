@@ -44,3 +44,7 @@ Then("the login button should be disabled", async function () {
 Then("all login elements should be visible", async function () {
   await loginPage.verifyLoginElements();
 });
+
+Then("the login error message should be visible", async function () {
+  expect(await loginPage.isLoginErrorMessageVisible()).toBe(true);
+});

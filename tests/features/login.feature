@@ -16,7 +16,7 @@ Feature: Login functionality
         Given I am on the login page
         When I enter credentials "<username>" and "<password>"
         And I click the login button
-        Then I should see an error message
+        Then the login error message should be visible
 
         Examples:
             | username     | password     |

@@ -1,31 +1,38 @@
 
+
 import { Locator, Page, expect } from "@playwright/test";
 import { BasePage } from "./BasePage";
 import { ILoginPage } from "../interfaces/ILoginPage";
+import { LoginLocators } from "../locators/login.locator";
 
 
 export class LoginPage extends BasePage implements ILoginPage {
 
+  // Locators provistos por LoginLocators
   private readonly titleLogin: Locator;
   private readonly inputUsername: Locator;
   private readonly inputPassword: Locator;
   private readonly buttonLogin: Locator;
   private readonly titleLoginSuccess: Locator;
+  private readonly loginErrorMessage: Locator;
 
-  private loginElementLocators = [
-    () => this.titleLogin,
-    () => this.inputUsername,
-    () => this.inputPassword,
-    () => this.buttonLogin,
-  ];
+  private loginElementLocators: Array<() => Locator>;
 
   constructor(page: Page) {
     super(page);
-    this.titleLogin = this.page.getByText("Swag Labs");
-    this.inputUsername = this.page.locator('[data-test="username"]');
-    this.inputPassword = this.page.locator('[data-test="password"]');
-    this.buttonLogin = this.page.locator('[data-test="login-button"]');
-    this.titleLoginSuccess = this.page.locator('[data-test="title"]');
+    this.titleLogin = LoginLocators.titleLogin(page);
+    this.inputUsername = LoginLocators.inputUsername(page);
+    this.inputPassword = LoginLocators.inputPassword(page);
+    this.buttonLogin = LoginLocators.buttonLogin(page);
+    this.titleLoginSuccess = LoginLocators.titleLoginSuccess(page);
+    this.loginErrorMessage = LoginLocators.loginErrorMessage(page);
+
+    this.loginElementLocators = [
+      () => this.titleLogin,
+      () => this.inputUsername,
+      () => this.inputPassword,
+      () => this.buttonLogin,
+    ];
   }
 
 
@@ -59,6 +66,10 @@ export class LoginPage extends BasePage implements ILoginPage {
 
   public async loginButtonShouldBeDisabled(): Promise<void> {
     await expect(this.buttonLogin).toBeDisabled();
+  }
+
+  public async isLoginErrorMessageVisible(): Promise<boolean> {
+    return await this.loginErrorMessage.isVisible();
   }
 
   public async isLoaded(): Promise<void> {
